@@ -1,0 +1,75 @@
+WIDTH=16;
+DEPTH=2048;
+
+ADDRESS_RADIX=HEX;
+DATA_RADIX=HEX;
+
+CONTENT BEGIN
+0000: 9000; -- 	IN	   Switches
+0001: 103F; -- 	STORE  Value
+0002: 083F; -- 	LOAD   Value
+0003: 4841; --     AND    Bit8  		;check if SW8 is up
+0004: 3809; --     JPOS   ANGLE_MODE 	;SW8 not up: pulse time mode
+0005: 2806; --     JUMP   PULSE_MODE	;SW8 up: angle functionality
+0006: B800; -- 	LOADI  0
+0007: 1005; -- 	STORE  Hex1			;don't output time of day for pulse mode
+0008: 2839; -- 	JUMP END
+0009: 083F; -- 	LOAD   Value
+000A: 4840; -- 	AND    Bit7			;mask first 8 bits
+000B: 6FD3; -- 	ADDI   -45			;determine time of day based on angle of solar panel
+000C: 4021; -- 	JZERO  ANGLE_7AM 	
+000D: 3021; -- 	JNEG   ANGLE_7AM
+000E: 6FF1; -- 	ADDI   -15
+000F: 3024; -- 	JNEG   ANGLE_10AM
+0010: 4024; -- 	JZERO  ANGLE_10AM
+0011: 6FF1; -- 	ADDI   -15
+0012: 3027; -- 	JNEG   ANGLE_11AM
+0013: 4027; -- 	JZERO  ANGLE_11AM
+0014: 6FF1; -- 	ADDI   -15
+0015: 302A; -- 	JNEG   ANGLE_12PM
+0016: 402A; -- 	JZERO  ANGLE_12PM
+0017: 6FF1; -- 	ADDI   -15
+0018: 302D; -- 	JNEG   ANGLE_1PM
+0019: 402D; -- 	JZERO  ANGLE_1PM
+001A: 6FF1; -- 	ADDI   -15
+001B: 3030; -- 	JNEG   ANGLE_2PM
+001C: 4030; -- 	JZERO  ANGLE_2PM
+001D: 6FF1; -- 	ADDI   -15
+001E: 3033; -- 	JNEG   ANGLE_3PM
+001F: 4033; -- 	JZERO  ANGLE_3PM
+0020: 2836; -- 	JUMP   ANGLE_7PM
+0021: B807; -- 	LOADI   7
+0022: 1005; -- 	STORE  Hex1
+0023: 2839; -- 	JUMP   END
+0024: B80A; -- 	LOADI   10
+0025: 1005; -- 	STORE  Hex1
+0026: 2839; -- 	JUMP   END
+0027: B80B; -- 	LOADI   11
+0028: 1005; -- 	STORE  Hex1
+0029: 2839; -- 	JUMP   END
+002A: B80C; -- 	LOADI   12
+002B: 1005; -- 	STORE  Hex1
+002C: 2839; -- 	JUMP   END
+002D: B80D; -- 	LOADI   13
+002E: 1005; -- 	STORE  Hex1
+002F: 2839; -- 	JUMP   END
+0030: B80E; -- 	LOADI   14
+0031: 1005; -- 	STORE  Hex1
+0032: 2839; -- 	JUMP   END
+0033: B80F; -- 	LOADI   15
+0034: 1005; -- 	STORE  Hex1
+0035: 2839; -- 	JUMP   END
+0036: B813; -- 	LOADI   19
+0037: 1005; -- 	STORE  Hex1
+0038: 2839; -- 	JUMP   END
+0039: 9805; --     OUT    Hex1			;output to Hex display
+003A: B800; --     LOADI  0
+003B: 9804; -- 	OUT    Hex0
+003C: 083F; --     LOAD   Value
+003D: 9830; -- 	OUT	   SERVO_CTRL	;output to peripheral
+003E: 2800; -- 	JUMP   START		;keep looping
+003F: 0000; -- Value: DW 0
+0040: 00FF; -- Bit7: DW &B0011111111
+0041: 0100; -- Bit8: DW &B0100000000
+[0042..07FF] : 0000; -- [empty memory]
+END;
